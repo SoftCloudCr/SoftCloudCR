@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- =========================================================
+       MACHOTE DE PÁGINA INFORMATIVA (EMPRESA ELÉCTRICA)
+       Tecnologías: HTML + TailwindCSS (CDN) + JS mínimo
+       Objetivos clave:
+       - Diseño moderno, limpio y accesible (alto contraste)
+       - Preloader con logo (fade) sobre degradado
+       - Hero con título/subtítulo + CTAs
+       - Servicios (4 items con íconos SVG inline)
+       - Equipo (fotos genéricas)
+       - Contacto (formulario + lista de servicios + WhatsApp)
+       - Footer con enlaces rápidos, redes y links legales
+       - Hook para Analytics (sin proveedor específico)
+       - Código ULTRA COMENTADO para mantenimiento futuro
+       ========================================================= -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- SEO básico (genérico, cámbialo luego) -->
+  <title>Servicios Eléctricos | Empresa</title>
+  <meta name="description" content="Empresa de servicios eléctricos. Instalaciones, mantenimiento y soluciones profesionales con enfoque en seguridad y calidad." />
+  <meta name="robots" content="index,follow" />
+
+  <!-- Favicon (reemplaza cuando tengas uno real) -->
+  <link rel="icon" href="logo.png" />
+
+  <!-- TailwindCSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    /*
+     * Configuración mínima de Tailwind (opcional):
+     * Aquí podrías extender paletas si quieres un look “eléctrico”.
+     * Por ahora, mantenemos colores por defecto para fácil rebranding.
+     */
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            // Paleta sugerida para empresa eléctrica (cámbiala cuando definas marca):
+            brand: {
+              50: '#f0f7ff',
+              100: '#e1effe',
+              200: '#c3defd',
+              300: '#95c5fb',
+              400: '#61a6f7',
+              500: '#3b82f6', // azul principal
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            },
+            accent: {
+              500: '#f59e0b', // dorado/ámbar para acentos (sensación “eléctrica”)
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /*
+     * Estilo adicional mínimo para el preloader.
+     * Usamos utilidades Tailwind y esta regla para bloquear scroll mientras carga.
+     */
+    html.is-loading, body.is-loading { overflow: hidden; }
+  </style>
+</head>
+<body class="antialiased text-gray-800 bg-white selection:bg-brand-100 selection:text-brand-900">
+  <!-- =========================================================
+       PRELOADER (LOGO CENTRADO + FADE)
+       - Duración mínima: 1.6s
+       - Cierre sólo cuando la página ha terminado de cargar
+       - Fondo con degradado (ajustable)
+       ========================================================= -->
+  <div id="preloader" class="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-brand-500 via-brand-600 to-brand-800 transition-opacity duration-700">
+    <!-- Contenedor del logo y micro-animación de latido -->
+    <div class="flex flex-col items-center gap-4">
+      <!--
+        Logo: reemplaza logo.png cuando lo tengas.
+        Sugerencia: usa SVG si querés animaciones más finas.
+      -->
+      <img src="logo.png" alt="Logo de la empresa" class="w-28 h-28 object-contain drop-shadow-xl opacity-0 animate-[fadeIn_600ms_ease-out_forwards]" />
+      <!-- Pequeño texto opcional debajo del logo (eliminable) -->
+      <p class="text-white/85 text-sm tracking-wide">Cargando sitio…</p>
+    </div>
+  </div>
+
+  <script>
+    // Añade clase de loading para bloquear scroll mientras se muestra el preloader
+    document.documentElement.classList.add('is-loading');
+    document.body.classList.add('is-loading');
+
+    (function preloaderController() {
+      // Duración mínima en milisegundos (1.6s solicitado)
+      const MIN_DURATION = 1600;
+      const start = performance.now();
+      let domReady = false;
+      let loaded = false;
+
+      // Marcamos DOM listo (por si querés sincronizar con otros recursos)
+      document.addEventListener('DOMContentLoaded', () => { domReady = true; maybeClose(); });
+      // Marcamos carga completa de página (incluye imágenes referenciadas correctamente)
+      window.addEventListener('load', () => { loaded = true; maybeClose(); });
+
+      function maybeClose() {
+        const elapsed = performance.now() - start;
+        // Requisitos para cerrar: tiempo mínimo + onload verdadero
+        if (loaded && elapsed >= MIN_DURATION) {
+          const pre = document.getElementById('preloader');
+          pre.classList.add('opacity-0');
+          // Removemos el overlay cuando acabe el fade
+          setTimeout(() => {
+            pre.style.display = 'none';
+            document.documentElement.classList.remove('is-loading');
+            document.body.classList.remove('is-loading');
+            document.body.removeAttribute('aria-busy');
+          }, 700); // debe coincidir con transition-opacity
+        } else if (loaded) {
+          // Si ya cargó pero aún no se cumple el mínimo, esperamos la diferencia
+          setTimeout(maybeClose, MIN_DURATION - elapsed);
+        }
+      }
+
+      // Accesibilidad: indica que el documento está ocupado
+      document.body.setAttribute('aria-busy', 'true');
+    })();
+  </script>
+
+  <!-- =========================================================
+       HEADER (Sticky) + NAV
+       - Ligero, transparente con blur y sombra sutil
+       - Anchors a secciones internas
+       ========================================================= -->
+  <header class="sticky top-0 z-40 backdrop-blur bg-white/80 border-b border-gray-200/60">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <img src="logo.png" alt="Logo" class="h-9 w-9 object-contain" />
+        <span class="font-semibold tracking-tight text-gray-900">Nombre de la Empresa</span>
+      </div>
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+        <a href="#inicio" class="text-gray-700 hover:text-brand-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded">Inicio</a>
+        <a href="#servicios" class="text-gray-700 hover:text-brand-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded">Servicios</a>
+        <a href="#equipo" class="text-gray-700 hover:text-brand-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded">Equipo</a>
+        <a href="#contacto" class="text-gray-700 hover:text-brand-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded">Contacto</a>
+      </nav>
+      <div class="md:hidden">
+        <!-- En una versión futura podés agregar un menú móvil -->
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================
+       HERO (Inicio)
+       - Título + subtítulo + dos CTAs (Contactar / Cotizar)
+       - Imagen de fondo sutil con overlay (opcional)
+       ========================================================= -->
+  <section id="inicio" class="relative">
+    <div class="relative isolate overflow-hidden">
+      <!-- Fondo decorativo tipo gradiente -->
+      <div class="absolute inset-0 -z-10 bg-gradient-to-br from-brand-50 via-white to-brand-100"></div>
+
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
+        <div class="max-w-3xl">
+          <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900 leading-tight">
+            Soluciones eléctricas seguras y profesionales
+          </h1>
+          <p class="mt-5 text-lg text-gray-600">
+            Instalaciones, mantenimiento y atención técnica con enfoque en calidad y seguridad.
+          </p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a href="#contacto" class="inline-flex items-center justify-center rounded-xl bg-brand-600 px-5 py-3 text-white font-semibold shadow hover:bg-brand-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500">
+              Contáctanos
+            </a>
+            <a href="#contacto" class="inline-flex items-center justify-center rounded-xl border border-gray-300 px-5 py-3 text-gray-900 font-semibold hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500">
+              Cotizar
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       SERVICIOS (4 items con íconos)
+       - Íconos SVG inline para no depender de librerías externas
+       ========================================================= -->
+  <section id="servicios" class="py-16 sm:py-20 bg-white">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="max-w-2xl">
+        <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900">Servicios</h2>
+        <p class="mt-3 text-gray-600">Seleccionados para cubrir necesidades residenciales y comerciales.</p>
+      </div>
+
+      <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Servicio 1: Instalación residencial -->
+        <article class="rounded-2xl border border-gray-200 p-6 hover:shadow-md transition-shadow focus-within:ring-2 focus-within:ring-brand-500">
+          <div class="h-12 w-12 rounded-xl bg-brand-50 flex items-center justify-center mb-4">
+            <!-- Ícono rayo -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-6 w-6 text-brand-600" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M13 3L4 14h7l-1 7 9-11h-7l1-7z" stroke-linejoin="round" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900">Instalación residencial</h3>
+          <p class="mt-2 text-gray-600 text-sm">Tendido, canalización y puntos eléctricos conforme normativa.</p>
+        </article>
+
+        <!-- Servicio 2: Mantenimiento preventivo -->
+        <article class="rounded-2xl border border-gray-200 p-6 hover:shadow-md transition-shadow focus-within:ring-2 focus-within:ring-brand-500">
+          <div class="h-12 w-12 rounded-xl bg-brand-50 flex items-center justify-center mb-4">
+            <!-- Ícono engranaje -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-6 w-6 text-brand-600" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M12 15a3 3 0 100-6 3 3 0 000 6z" />
+              <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004 15a1.65 1.65 0 00-1.51-1H2a2 2 0 010-4h.09A1.65 1.65 0 004 8a1.65 1.65 0 00-.33-1.82l-.06-.06A2 2 0 016.44 3.3l.06.06c.48.48 1.16.62 1.82.33H9a1.65 1.65 0 001-1.51V2a2 2 0 014 0v.09a1.65 1.65 0 001 1.51h.68c.66.29 1.34.15 1.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06c-.48.48-.62 1.16-.33 1.82V9c0 .66.62 1.34 1.51 1H22a2 2 0 010 4h-.09c-.89 0-1.51.62-1.51 1z" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900">Mantenimiento preventivo</h3>
+          <p class="mt-2 text-gray-600 text-sm">Revisión de tableros, térmicos y puestas a tierra para evitar fallas.</p>
+        </article>
+
+        <!-- Servicio 3: Cableado estructurado -->
+        <article class="rounded-2xl border border-gray-200 p-6 hover:shadow-md transition-shadow focus-within:ring-2 focus-within:ring-brand-500">
+          <div class="h-12 w-12 rounded-xl bg-brand-50 flex items-center justify-center mb-4">
+            <!-- Ícono plug -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-6 w-6 text-brand-600" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M9 7v6m6-6v6M7 13h10a2 2 0 012 2v1a5 5 0 01-5 5H10a5 5 0 01-5-5v-1a2 2 0 012-2z" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900">Cableado estructurado</h3>
+          <p class="mt-2 text-gray-600 text-sm">Tendidos limpios para datos y energía en oficinas y comercios.</p>
+        </article>
+
+        <!-- Servicio 4: Tableros eléctricos y breakers -->
+        <article class="rounded-2xl border border-gray-200 p-6 hover:shadow-md transition-shadow focus-within:ring-2 focus-within:ring-brand-500">
+          <div class="h-12 w-12 rounded-xl bg-brand-50 flex items-center justify-center mb-4">
+            <!-- Ícono escudo/seguridad -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-6 w-6 text-brand-600" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M12 3l7 4v5c0 5-3.5 9-7 9s-7-4-7-9V7l7-4z" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900">Tableros eléctricos y breakers</h3>
+          <p class="mt-2 text-gray-600 text-sm">Diseño, montaje y corrección de protecciones para tu instalación.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       EQUIPO (fotos genéricas)
+       - Usa archivos locales como imagen_equipo_1.png, etc.
+       ========================================================= -->
+  <section id="equipo" class="py-16 sm:py-20 bg-brand-50/40">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="max-w-2xl">
+        <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900">Nuestro equipo</h2>
+        <p class="mt-3 text-gray-600">Técnicos certificados, orientados a la seguridad y el buen trato.</p>
+      </div>
+
+      <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Tarjeta de persona (reutilizable) -->
+        <article class="rounded-2xl border border-gray-200 overflow-hidden bg-white">
+          <img src="imagen_equipo_1.png" alt="Integrante del equipo" class="h-48 w-full object-cover" />
+          <div class="p-5">
+            <h3 class="font-semibold text-gray-900">Nombre Apellido</h3>
+            <p class="text-sm text-gray-600">Técnico electricista</p>
+          </div>
+        </article>
+        <article class="rounded-2xl border border-gray-200 overflow-hidden bg-white">
+          <img src="imagen_equipo_1.png" alt="Integrante del equipo" class="h-48 w-full object-cover" />
+          <div class="p-5">
+            <h3 class="font-semibold text-gray-900">Nombre Apellido</h3>
+            <p class="text-sm text-gray-600">Técnico electricista</p>
+          </div>
+        </article>
+        <article class="rounded-2xl border border-gray-200 overflow-hidden bg-white">
+          <img src="imagen_equipo_1.png" alt="Integrante del equipo" class="h-48 w-full object-cover" />
+          <div class="p-5">
+            <h3 class="font-semibold text-gray-900">Nombre Apellido</h3>
+            <p class="text-sm text-gray-600">Supervisor</p>
+          </div>
+        </article>
+        <article class="rounded-2xl border border-gray-200 overflow-hidden bg-white">
+          <img src="imagen_equipo_1.png" alt="Integrante del equipo" class="h-48 w-full object-cover" />
+          <div class="p-5">
+            <h3 class="font-semibold text-gray-900">Nombre Apellido</h3>
+            <p class="text-sm text-gray-600">Ingeniero eléctrico</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       CONTACTO
+       - Formulario con lista de servicios (inventados) y campos solicitados
+       - Correo directo y WhatsApp
+       - Validación simple HTML5
+       - Hook para envío posterior a correo corporativo (backend o servicio externo)
+       ========================================================= -->
+  <section id="contacto" class="py-16 sm:py-20 bg-white">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <!-- Columna A: Formulario -->
+        <div>
+          <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900">Contacto</h2>
+          <p class="mt-3 text-gray-600">Escribinos y con gusto te ayudamos.</p>
+
+          <!-- Nota: data-email define el correo destino a configurar cuando tengas dominio -->
+          <form id="contactForm" action="#" method="POST" class="mt-8 space-y-5" data-email="contacto@tudominio.cr" novalidate>
+            <!-- Nombre -->
+            <div>
+              <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre completo</label>
+              <input id="nombre" name="nombre" type="text" required class="mt-2 w-full rounded-xl border-gray-300 focus:border-brand-500 focus:ring-brand-500" placeholder="Tu nombre" />
+            </div>
+
+            <!-- Correo -->
+            <div>
+              <label for="correo" class="block text-sm font-medium text-gray-700">Correo</label>
+              <input id="correo" name="correo" type="email" required class="mt-2 w-full rounded-xl border-gray-300 focus:border-brand-500 focus:ring-brand-500" placeholder="tunombre@correo.com" />
+            </div>
+
+            <!-- Teléfono -->
+            <div>
+              <label for="telefono" class="block text-sm font-medium text-gray-700">Teléfono</label>
+              <input id="telefono" name="telefono" type="tel" inputmode="tel" pattern="[0-9+\-\s]{8,}" required class="mt-2 w-full rounded-xl border-gray-300 focus:border-brand-500 focus:ring-brand-500" placeholder="506 0000 0000" />
+              <p class="mt-1 text-xs text-gray-500">Mínimo 8 dígitos. Acepta +, -, espacios.</p>
+            </div>
+
+            <!-- Asunto -->
+            <div>
+              <label for="asunto" class="block text-sm font-medium text-gray-700">Asunto</label>
+              <input id="asunto" name="asunto" type="text" required class="mt-2 w-full rounded-xl border-gray-300 focus:border-brand-500 focus:ring-brand-500" placeholder="Consulta, cotización, visita técnica…" />
+            </div>
+
+            <!-- Servicio (lista desplegable inventada) -->
+            <div>
+              <label for="servicio" class="block text-sm font-medium text-gray-700">Servicio requerido</label>
+              <select id="servicio" name="servicio" required class="mt-2 w-full rounded-xl border-gray-300 focus:border-brand-500 focus:ring-brand-500">
+                <option value="" disabled selected>Elegí un servicio…</option>
+                <option>Instalación residencial</option>
+                <option>Mantenimiento preventivo</option>
+                <option>Reparación de fallas</option>
+                <option>Cableado estructurado</option>
+                <option>Tableros eléctricos y breakers</option>
+                <option>Instalación de iluminación LED</option>
+                <option>Puesta a tierra y mediciones</option>
+                <option>Emergencias 24/7</option>
+              </select>
+            </div>
+
+            <!-- Descripción del servicio -->
+            <div>
+              <label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción del servicio</label>
+              <textarea id="descripcion" name="descripcion" rows="5" required class="mt-2 w-full rounded-xl border-gray-300 focus:border-brand-500 focus:ring-brand-500" placeholder="Contanos brevemente qué necesitás."></textarea>
+            </div>
+
+            <!-- Checkbox de política -->
+            <div class="flex items-start gap-3">
+              <input id="politica" name="politica" type="checkbox" required class="mt-1 h-4 w-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500" />
+              <label for="politica" class="text-sm text-gray-700">Acepto la <a href="#" class="text-brand-700 hover:underline">Política de privacidad</a>.</label>
+            </div>
+
+            <!-- Botones -->
+            <div class="flex items-center gap-3">
+              <button type="submit" class="inline-flex items-center justify-center rounded-xl bg-brand-600 px-5 py-3 text-white font-semibold shadow hover:bg-brand-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500">
+                Enviar
+              </button>
+              <button type="reset" class="inline-flex items-center justify-center rounded-xl border border-gray-300 px-5 py-3 text-gray-900 font-semibold hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500">
+                Limpiar
+              </button>
+            </div>
+
+            <!-- Mensaje de estado (éxito/error simple) -->
+            <p id="formStatus" class="text-sm mt-2 hidden"></p>
+          </form>
+        </div>
+
+        <!-- Columna B: Datos de contacto -->
+        <aside class="lg:pl-10">
+          <div class="rounded-2xl border border-gray-200 p-6 bg-brand-50/60">
+            <h3 class="text-xl font-semibold text-gray-900">Información</h3>
+            <ul class="mt-4 space-y-3 text-gray-700">
+              <li><strong>Correo:</strong> <a href="mailto:contacto@tudominio.cr" class="text-brand-700 hover:underline">contacto@tudominio.cr</a></li>
+              <li><strong>WhatsApp:</strong> <a href="https://wa.me/50600000000" target="_blank" rel="noopener" class="text-brand-700 hover:underline">+506 0000 0000</a></li>
+              <li><strong>Horario:</strong> Lun a Sáb, 8:00 a.m. a 6:00 p.m.</li>
+            </ul>
+            <p class="mt-4 text-sm text-gray-600">Actualizá estos datos con los reales cuando tengas dominio y línea.</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       BOTÓN FLOTANTE DE WHATSAPP
+       - Ajustá el número real en el href
+       ========================================================= -->
+  <a href="https://wa.me/50600000000" target="_blank" rel="noopener" aria-label="Chatear por WhatsApp" class="fixed bottom-5 right-5 z-40 inline-flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-white shadow-lg hover:bg-green-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500">
+    <!-- Ícono WhatsApp SVG simple -->
+    <svg viewBox="0 0 32 32" class="h-7 w-7 fill-current" xmlns="http://www.w3.org/2000/svg"><path d="M19.11 17.56c-.29-.14-1.7-.84-1.96-.93-.26-.1-.45-.14-.64.14-.19.29-.74.93-.9 1.12-.17.19-.33.22-.61.07-.29-.14-1.21-.45-2.31-1.43-.85-.76-1.43-1.7-1.6-1.98-.17-.29-.02-.45.12-.59.12-.12.29-.33.43-.5.14-.17.19-.29.29-.48.1-.19.05-.36-.02-.5-.07-.14-.64-1.54-.88-2.12-.23-.55-.47-.47-.64-.47-.17 0-.36-.02-.55-.02-.19 0-.5.07-.76.36-.26.29-1 1-.97 2.43.02 1.43 1.02 2.81 1.16 3 .14.19 2.01 3.06 4.88 4.29 1.82.79 2.53.86 3.43.72.55-.09 1.7-.69 1.94-1.36.24-.67.24-1.24.17-1.36-.07-.12-.26-.19-.55-.33zM16.06 28c-2.05 0-4.05-.55-5.8-1.59l-4.04 1.29 1.32-3.94C6.4 21.93 6 19.96 6 18 6 11.37 11.37 6 18 6s12 5.37 12 12-5.37 12-12 12zM28 18c0-5.52-4.48-10-10-10S8 12.48 8 18c0 1.9.53 3.68 1.45 5.2l-.94 2.82 2.9-.93A9.94 9.94 0 0 0 18 28c5.52 0 10-4.48 10-10z"/></svg>
+  </a>
+
+  <!-- =========================================================
+       FOOTER
+       - Enlaces rápidos, redes, y legales
+       ========================================================= -->
+  <footer class="border-t border-gray-200 bg-white">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div class="md:col-span-2">
+          <div class="flex items-center gap-3">
+            <img src="logo.png" alt="Logo" class="h-9 w-9 object-contain" />
+            <span class="font-semibold tracking-tight text-gray-900">Nombre de la Empresa</span>
+          </div>
+          <p class="mt-4 text-sm text-gray-600 max-w-md">
+            Soluciones eléctricas con enfoque en seguridad, calidad y atención cercana.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="text-sm font-semibold text-gray-900">Enlaces</h4>
+          <ul class="mt-3 space-y-2 text-sm text-gray-700">
+            <li><a href="#inicio" class="hover:text-brand-700">Inicio</a></li>
+            <li><a href="#servicios" class="hover:text-brand-700">Servicios</a></li>
+            <li><a href="#equipo" class="hover:text-brand-700">Equipo</a></li>
+            <li><a href="#contacto" class="hover:text-brand-700">Contacto</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-sm font-semibold text-gray-900">Redes</h4>
+          <!-- Reemplazá con enlaces reales -->
+          <ul class="mt-3 space-y-2 text-sm text-gray-700">
+            <li><a href="https://facebook.com/tuempresa" target="_blank" rel="noopener" class="hover:text-brand-700">Facebook</a></li>
+            <li><a href="https://instagram.com/tuempresa" target="_blank" rel="noopener" class="hover:text-brand-700">Instagram</a></li>
+            <li><a href="https://www.linkedin.com/company/tuempresa" target="_blank" rel="noopener" class="hover:text-brand-700">LinkedIn</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-gray-200 pt-6">
+        <p class="text-xs text-gray-500">© <span id="year"></span> Nombre de la Empresa. Todos los derechos reservados.</p>
+        <div class="flex items-center gap-4 text-xs text-gray-600">
+          <!-- Reemplazá por tus rutas reales o archivos HTML cuando los tengas -->
+          <a href="#" class="hover:text-brand-700">Política de privacidad</a>
+          <span class="text-gray-300">|</span>
+          <a href="#" class="hover:text-brand-700">Términos y condiciones</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- =========================================================
+       SCRIPTS: Año dinámico, envío básico, y HOOK de Analytics
+       ========================================================= -->
+  <script>
+    // Año dinámico en el footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Envío básico del formulario (placeholder):
+    // - Valida con HTML5.
+    // - Muestra mensaje de estado.
+    // - Deja listo el punto para integrar envío real a correo corporativo (API/servicio).
+    (function formHandler(){
+      const form = document.getElementById('contactForm');
+      const statusEl = document.getElementById('formStatus');
+
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+
+        // Si el formulario incumple validaciones HTML5, mostramos error básico
+        if (!form.checkValidity()) {
+          statusEl.textContent = 'Revisá los campos marcados. Faltan datos o hay un formato inválido.';
+          statusEl.className = 'text-sm mt-2 text-red-600';
+          return;
+        }
+
+        // Extraemos datos
+        const data = Object.fromEntries(new FormData(form).entries());
+        // Correo destino (reemplazá cuando tengas dominio configurado)
+        const targetEmail = form.dataset.email || 'contacto@tudominio.cr';
+
+        // Placeholder de envío: simulamos éxito y mostramos mensaje
+        // En producción: hacé fetch a tu endpoint / servicio de correo
+        // Ejemplo (futuro):
+        // fetch('/api/contacto', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+        //  .then(() => ...)
+
+        console.log('[DEBUG] Datos del formulario:', data);
+        statusEl.textContent = '¡Gracias! Recibimos tu mensaje. Te contactamos pronto.';
+        statusEl.className = 'text-sm mt-2 text-green-600';
+        form.reset();
+      });
+    })();
+
+    // HOOK genérico para Analytics: pegá tu script/ID donde corresponda.
+    // Mantenerlo genérico evita dependencias con un proveedor específico.
+    (function analyticsHook(){
+      // Ejemplo de función:
+      // injectAnalytics('TU_ANALYTICS_ID');
+      // function injectAnalytics(id){ /* Insertá aquí el script de tu proveedor */ }
+    })();
+  </script>
+
+  <!--
+    NOTAS DE PERSONALIZACIÓN RÁPIDA:
+    1) Cambiar marca: usa la paleta brand en tailwind.config (arriba) o reemplazá clases brand-*** por tus colores.
+    2) Reemplazar imágenes: logo.png y las imagen_equipo_*.png por tus archivos reales.
+    3) Servicios: editá títulos/descripciones e íconos SVG.
+    4) Formulario: conectá el envío a tu backend y cambiá data-email.
+    5) WhatsApp: actualizá el numero real en los dos href.
+    6) Legales: creá las páginas y reemplazá enlaces del footer.
+    7) Accesibilidad: ya hay focus rings visibles y buen contraste. Conservá estos estilos.
+  -->
+</body>
+</html>
