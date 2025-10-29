@@ -7,26 +7,15 @@
   <!-- Tailwind via CDN para prototipo -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    /* Config rápida de Tailwind para colores de marca tomados del manual:
-       Rojo #BE1622, Gris #9D9D9C, Negro #000000  */
+    // Configuración de colores según manual de marca
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            brand: {
-              red: '#BE1622',
-              gray: '#9D9D9C',
-              black: '#000000',
-            }
+            brand: { red: '#BE1622', gray: '#9D9D9C', black: '#000000' }
           },
-          fontFamily: {
-            // Cambiar si el cliente define tipografía; por ahora sistema
-            display: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-            body: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif']
-          },
-          boxShadow: {
-            soft: '0 10px 30px rgba(0,0,0,0.08)'
-          }
+          fontFamily: { display: ['var(--font-display)','Inter','ui-sans-serif','system-ui','sans-serif'], body: ['var(--font-body)','Inter','ui-sans-serif','system-ui','sans-serif'] },
+          boxShadow: { soft: '0 10px 30px rgba(0,0,0,0.08)' }
         }
       }
     }
@@ -35,39 +24,71 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
-    /* Altura del hero para mobile/desktop */
-    .hero { min-height: 52vh; }
-    @media (min-width: 1024px) { .hero { min-height: 70vh; } }
-  </style>
-  <head>
-  <link rel="shortcut icon" href="logo.png">
-</head>
+    :root{
+      /* Reemplazar con las fuentes del manual de marca */
+      --font-display: "ELITEC-Display"; /* TITULARES */
+      --font-body: "ELITEC-Text";      /* PÁRRAFOS */
+    }
+    /* Carga opcional de fuentes locales (reemplazar rutas cuando las tengas) */
+    @font-face{font-family: "ELITEC-Display"; src: url('/fonts/elitec-display.woff2') format('woff2'); font-weight: 600 800; font-style: normal; font-display: swap;}
+    @font-face{font-family: "ELITEC-Text"; src: url('/fonts/elitec-text.woff2') format('woff2'); font-weight: 300 700; font-style: normal; font-display: swap;}
 
+    html{scroll-behavior:smooth}
+    .hero { min-height: 68vh; }
+    @media (min-width: 1024px) { .hero { min-height: 78vh; } }
+    .ratio { position: relative; width: 100%; }
+    .ratio>img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    /* Evitar que el header tape anclas */
+    :target{ scroll-margin-top: 90px; }
+    /* Animaciones y microinteracciones */
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in{opacity:1;transform:translateY(0)}
+  .reveal.delay-1{transition-delay:.1s}
+  .reveal.delay-2{transition-delay:.2s}
+  .reveal.delay-3{transition-delay:.3s}
+  .card-animate{transition:transform .25s ease, box-shadow .25s ease}
+  .card-animate{will-change:transform}
+  .card-animate:hover,.card-animate:focus-within{transform:translateY(-4px) scale(1.04);box-shadow:0 22px 44px rgba(0,0,0,.16)}
+  .parallax-wrap{will-change:transform}
+  .parallax-hero{transform:translateY(0);transition:transform .2s ease-out}
+  .countup{font-variant-numeric:tabular-nums}
+  @media (prefers-reduced-motion: reduce){
+    .reveal,.card-animate,.parallax-hero{transition:none!important;transform:none!important}
+  }
+  /* Acordeón suave */
+  .accordion-panel{overflow:hidden;height:0;transition:height .28s ease}
+  .accordion-btn svg{transition:transform .24s ease}
+</style>
+  <meta name="description" content="ELITEC | Soluciones eléctricas integrales: planos, instalaciones, medición y cercas eléctricas en Costa Rica."/>
+  <meta property="og:title" content="ELITEC | Servicios Eléctricos"/>
+  <meta property="og:description" content="Planos eléctricos, instalaciones, medición y cercas eléctricas con calidad y seguridad."/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:image" content="/og-image.png"/>
+  <meta name="theme-color" content="#BE1622"/>
 </head>
 <body class="font-body bg-white text-brand-black/90">
-  <!-- Barra superior -->
+  <!-- Header -->
   <header class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-brand-gray/30">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
-        <!-- Logo: reemplazar src cuando lo envíen -->
-        <a href="isotipo.png" class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded "><img src="isotipo.png"></div>
-          <span class="sr-only">ELITEC</span>
+        <a href="#" class="flex items-center gap-3">
+          <!-- Logo: reemplazar src por el real en PNG o SVG -->
+          <img src="logo_elitec.png" alt="ELITEC" class="w-10 h-10 object-contain" loading="eager" width="40" height="40"/>
           <span class="text-lg font-bold tracking-wide">ELITEC</span>
         </a>
-
-        <!-- Navegación desktop -->
         <nav class="hidden md:flex items-center gap-6 text-sm font-medium">
           <a href="#nuevos" class="hover:text-brand-red">Nuevos servicios</a>
           <a href="#portafolio" class="hover:text-brand-red">Trabajos realizados</a>
           <a href="#nosotros" class="hover:text-brand-red">Sobre nosotros</a>
           <div class="relative group">
             <button class="hover:text-brand-red">Servicios</button>
-            <!-- Submenú simple -->
-            <div class="absolute hidden group-hover:block bg-white border border-brand-gray/40 rounded-lg shadow-soft mt-2 min-w-[220px] p-3">
+            <div class="absolute hidden group-hover:block bg-white border border-brand-gray/40 rounded-lg shadow-soft mt-2 min-w-[240px] p-3">
               <a href="#servicios" class="block px-3 py-2 rounded hover:bg-brand-red/5">Planos eléctricos</a>
               <a href="#servicios" class="block px-3 py-2 rounded hover:bg-brand-red/5">Medición de medidores</a>
               <a href="#servicios" class="block px-3 py-2 rounded hover:bg-brand-red/5">Cercas eléctricas</a>
+              <a href="#servicios" class="block px-3 py-2 rounded hover:bg-brand-red/5">Instalaciones eléctricas</a>
+              <a href="#servicios" class="block px-3 py-2 rounded hover:bg-brand-red/5">Mantenimiento</a>
+              <a href="#servicios" class="block px-3 py-2 rounded hover:bg-brand-red/5">Asesoría y supervisión</a>
             </div>
           </div>
           <form class="relative">
@@ -75,15 +96,11 @@
             <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-brand-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m1.6-5.15a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
           </form>
         </nav>
-
-        <!-- Botón móvil -->
         <button id="btnMobile" class="md:hidden p-2 rounded border border-brand-gray/50" aria-label="Abrir menú">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
         </button>
       </div>
     </div>
-
-    <!-- Menú móvil -->
     <div id="mobileMenu" class="md:hidden hidden border-t border-brand-gray/30 bg-white">
       <div class="max-w-7xl mx-auto px-4 py-4 grid gap-3">
         <a href="#nuevos" class="py-2">Nuevos servicios</a>
@@ -99,39 +116,50 @@
 
   <!-- HERO / CARRUSEL -->
   <section class="hero relative overflow-hidden">
-    <div class="absolute inset-0 bg-[url('hero_1.png')] bg-cover bg-center" id="heroBg"></div>
-    <div class="absolute inset-0 bg-black/40"></div>
-
-    <div class="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
-      <div class="text-white max-w-2xl py-16">
-        <h1 class="text-3xl sm:text-5xl font-display font-extrabold leading-tight">Soluciones eléctricas confiables para industria y comercio</h1>
-        <p class="mt-4 text-white/90">Diseño de planos, medición certificada y cercas eléctricas con estándares profesionales.</p>
-        <div class="mt-6 flex gap-3">
-          <a href="#servicios" class="inline-flex items-center px-5 py-3 rounded-md bg-brand-red text-white font-semibold shadow-soft hover:bg-brand-red/90">Ver servicios</a>
-          <a href="#portafolio" class="inline-flex items-center px-5 py-3 rounded-md bg-white/10 border border-white/30 text-white hover:bg-white/20">Portafolio</a>
+    <div class="h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
+      <div class="relative w-full parallax-wrap">
+        <div class="ratio aspect-[16/9] lg:aspect-[21/9] rounded-2xl overflow-hidden shadow-soft">
+          <!-- Diapositivas: reemplazar por PNG reales -->
+          <img id="heroImg" src="hero_1.png" alt="Soluciones eléctricas para industria y comercio" loading="eager" width="2560" height="1100" />
         </div>
+        <div id="heroCopy" class="absolute inset-0 flex items-center parallax-hero">
+          <div class="px-6 lg:px-10 max-w-2xl">
+            <span class="inline-block mb-3 text-xs font-semibold tracking-widest uppercase text-white/90">Energía que impulsa tu desarrollo</span>
+            <h1 class="text-3xl sm:text-5xl font-display font-extrabold leading-tight text-white drop-shadow">Energía que impulsa tu desarrollo</h1>
+            <p class="mt-4 text-white/90">Soluciones eléctricas integrales: diseño de planos, instalaciones, medición certificada y cercas eléctricas para industria y comercio en Costa Rica.</p>
+            <div class="mt-6 flex gap-3">
+              <a href="#servicios" class="inline-flex items-center px-5 py-3 rounded-md bg-brand-red text-white font-semibold shadow-soft hover:bg-brand-red/90">Ver servicios</a>
+              <a href="#portafolio" class="inline-flex items-center px-5 py-3 rounded-md bg-white/10 border border-white/30 text-white hover:bg-white/20">Portafolio</a>
+            </div>
+          </div>
+        </div>
+        <div class="absolute inset-x-0 -bottom-10 flex justify-center gap-2" id="heroDots"></div>
       </div>
     </div>
-
-    <!-- Controles del carrusel: simple rotación de fondo -->
-    <div class="absolute inset-x-0 bottom-4 flex justify-center gap-2" id="heroDots"></div>
   </section>
 
-  <!-- DESTACADOS / SERVICIOS PRINCIPALES -->
+  <!-- MÉTRICAS / CONTADORES -->
+  <section class="py-12 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+      <div class="reveal"><div class="text-3xl font-extrabold text-brand-red countup" data-to="12">0</div><p class="text-sm text-gray-600">Años de experiencia</p></div>
+      <div class="reveal delay-1"><div class="text-3xl font-extrabold text-brand-red countup" data-to="180">0</div><p class="text-sm text-gray-600">Proyectos entregados</p></div>
+      <div class="reveal delay-2"><div class="text-3xl font-extrabold text-brand-red countup" data-to="95">0</div><p class="text-sm text-gray-600">Clientes satisfechos</p></div>
+      <div class="reveal delay-3"><div class="text-3xl font-extrabold text-brand-red countup" data-to="24">0</div><p class="text-sm text-gray-600">Atención 24/7</p></div>
+    </div>
+  </section>
+
+  <!-- DESTACADOS -->
   <section id="servicios" class="py-16 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-end justify-between gap-6">
-        <h2 class="text-2xl sm:text-3xl font-bold">Servicios destacados</h2>
-        <a href="#" class="text-brand-red font-medium">Ver todos</a>
+        <h2 class="reveal text-2xl sm:text-3xl font-display font-bold">Servicios destacados</h2>
+        <a href="#todos-servicios" class="text-brand-red font-medium">Ver todos</a>
       </div>
-
-      <!-- Tarjetas -->
       <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- 1. Planos eléctricos -->
-        <article class="bg-white rounded-2xl shadow-soft overflow-hidden">
-          <!-- Placeholder de imagen: reemplazar por archivo real "planos-electricos.jpg" -->
-          <div class="aspect-[4/3] bg-gray-200 grid place-items-center text-sm text-gray-600 ">
-            <img src="planos-electricos.png">
+        <!-- 4:3 recomendado 1600x1200 -->
+        <article class="bg-white rounded-2xl shadow-soft overflow-hidden card-animate reveal">
+          <div class="ratio aspect-[4/3] bg-gray-100">
+            <img src="planos-electricos.png" alt="Diseño de planos eléctricos" loading="lazy" width="1600" height="1200"/>
           </div>
           <div class="p-6">
             <h3 class="text-lg font-semibold">Diseño de planos eléctricos</h3>
@@ -139,21 +167,20 @@
             <a href="#contacto" class="mt-4 inline-flex items-center px-4 py-2 rounded-md bg-brand-red text-white font-medium hover:bg-brand-red/90">Cotizar</a>
           </div>
         </article>
-
-        <!-- 2. Medición de medidores -->
-        <article class="bg-white rounded-2xl shadow-soft overflow-hidden">
-          <div class="aspect-[4/3] bg-gray-200 grid place-items-center text-sm text-gray-600">
-            <img src="medicion-de-medidores.png"></div>
+        <article class="bg-white rounded-2xl shadow-soft overflow-hidden card-animate reveal">
+          <div class="ratio aspect-[4/3] bg-gray-100">
+            <img src="medicion-de-medidores.png" alt="Medición y verificación de medidores" loading="lazy" width="1600" height="1200"/>
+          </div>
           <div class="p-6">
             <h3 class="text-lg font-semibold">Medición y verificación de medidores</h3>
             <p class="mt-2 text-sm text-gray-600">Pruebas y reportes técnicos para diagnóstico, calibración y eficiencia energética.</p>
             <a href="#contacto" class="mt-4 inline-flex items-center px-4 py-2 rounded-md bg-brand-red text-white font-medium hover:bg-brand-red/90">Agendar visita</a>
           </div>
         </article>
-
-        <!-- 3. Cercas eléctricas -->
-        <article class="bg-white rounded-2xl shadow-soft overflow-hidden">
-          <div class="aspect-[4/3] bg-gray-200 grid place-items-center text-sm text-gray-600"><img src="cercas-electricas.png"></div>
+        <article class="bg-white rounded-2xl shadow-soft overflow-hidden card-animate reveal">
+          <div class="ratio aspect-[4/3] bg-gray-100">
+            <img src="cercas-electricas.png" alt="Cercas eléctricas y protección perimetral" loading="lazy" width="1600" height="1200"/>
+          </div>
           <div class="p-6">
             <h3 class="text-lg font-semibold">Cercas eléctricas y protección perimetral</h3>
             <p class="mt-2 text-sm text-gray-600">Instalación, mantenimiento y mejora de sistemas de seguridad para comercios e industria.</p>
@@ -164,91 +191,169 @@
     </div>
   </section>
 
-  <!-- PORTAFOLIO (inventado con contexto) -->
+  <!-- TODOS LOS SERVICIOS (sección extendida) -->
+  <section id="todos-servicios" class="py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 id="servicios-todos" class="reveal text-2xl sm:text-3xl font-display font-bold">Servicios</h2>
+      <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="bg-white rounded-xl shadow-soft p-0 overflow-hidden reveal">
+          <button class="w-full flex items-center justify-between px-6 py-4 text-left focus:outline-none focus:ring-2 focus:ring-brand-red/40 accordion-btn">
+            <span class="font-semibold">Diseño de planos eléctricos</span>
+            <svg class="w-5 h-5 transition-transform" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"/></svg>
+          </button>
+          <div class="px-6 pb-5 accordion-panel">
+            <p class="text-gray-600">Elaboración de planos conforme normativa, aptos para permisos y ejecución de obra. Actualización as-built.</p>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl shadow-soft p-0 overflow-hidden reveal">
+          <button class="w-full flex items-center justify-between px-6 py-4 text-left focus:outline-none focus:ring-2 focus:ring-brand-red/40 accordion-btn">
+            <span class="font-semibold">Instalaciones eléctricas</span>
+            <svg class="w-5 h-5 transition-transform" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"/></svg>
+          </button>
+          <div class="px-6 pb-5 accordion-panel">
+            <p class="text-gray-600">Cableado, canalización, tableros y alumbrado para residencial, comercial e industrial.</p>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl shadow-soft p-0 overflow-hidden reveal">
+          <button class="w-full flex items-center justify-between px-6 py-4 text-left focus:outline-none focus:ring-2 focus:ring-brand-red/40 accordion-btn">
+            <span class="font-semibold">Medición y verificación de medidores</span>
+            <svg class="w-5 h-5 transition-transform" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"/></svg>
+          </button>
+          <div class="px-6 pb-5 accordion-panel">
+            <p class="text-gray-600">Diagnóstico energético, calibración y reportes para control de consumo.</p>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl shadow-soft p-0 overflow-hidden reveal">
+          <button class="w-full flex items-center justify-between px-6 py-4 text-left focus:outline-none focus:ring-2 focus:ring-brand-red/40 accordion-btn">
+            <span class="font-semibold">Cercas eléctricas</span>
+            <svg class="w-5 h-5 transition-transform" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"/></svg>
+          </button>
+          <div class="px-6 pb-5 accordion-panel">
+            <p class="text-gray-600">Diseño, instalación y mantenimiento con señalización reglamentaria.</p>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl shadow-soft p-0 overflow-hidden reveal">
+          <button class="w-full flex items-center justify-between px-6 py-4 text-left focus:outline-none focus:ring-2 focus:ring-brand-red/40 accordion-btn">
+            <span class="font-semibold">Mantenimiento eléctrico</span>
+            <svg class="w-5 h-5 transition-transform" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"/></svg>
+          </button>
+          <div class="px-6 pb-5 accordion-panel">
+            <p class="text-gray-600">Preventivo y correctivo, limpieza de tableros y reemplazo de componentes.</p>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl shadow-soft p-0 overflow-hidden reveal">
+          <button class="w-full flex items-center justify-between px-6 py-4 text-left focus:outline-none focus:ring-2 focus:ring-brand-red/40 accordion-btn">
+            <span class="font-semibold">Asesoría y supervisión</span>
+            <svg class="w-5 h-5 transition-transform" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"/></svg>
+          </button>
+          <div class="px-6 pb-5 accordion-panel">
+            <p class="text-gray-600">Control de calidad en obra, cumplimiento normativo y soporte en permisos.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PORTAFOLIO -->
   <section id="portafolio" class="py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 class="text-2xl sm:text-3xl font-bold">Trabajos realizados</h2>
+      <h2 class="reveal text-2xl sm:text-3xl font-display font-bold">Trabajos realizados</h2>
       <p class="mt-2 text-gray-600">Selección de proyectos recientes en industria, comercio y residenciales premium.</p>
-
       <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Cada tarjeta usa un placeholder de imagen que luego se reemplaza -->
-        <article class="bg-white rounded-xl shadow-soft overflow-hidden">
-          <div class="aspect-[16/9] bg-gray-200 grid place-items-center text-sm text-gray-600"><img src="planta-empacadora-planos.png"></div>
+        <!-- 16:9 recomendado 1920x1080 -->
+        <article class="bg-white rounded-xl shadow-soft overflow-hidden card-animate reveal">
+          <div class="ratio aspect-[16/9] bg-gray-100">
+            <img src="planta-empacadora-planos.png" alt="Planos eléctricos en planta empacadora" loading="lazy" width="1920" height="1080"/>
+          </div>
           <div class="p-5">
             <h3 class="font-semibold">Planos eléctricos | Planta empacadora</h3>
             <p class="mt-2 text-sm text-gray-600">Levantamiento y diseño de planos para líneas de proceso y cuartos fríos.</p>
           </div>
         </article>
-
-        <article class="bg-white rounded-xl shadow-soft overflow-hidden">
-          <div class="aspect-[16/9] bg-gray-200 grid place-items-center text-sm text-gray-600"><img src="medicion-centro-comercial.png"></div>
+        <article class="bg-white rounded-xl shadow-soft overflow-hidden card-animate reveal">
+          <div class="ratio aspect-[16/9] bg-gray-100">
+            <img src="medicion-centro-comercial.png" alt="Medición de medidores en centro comercial" loading="lazy" width="1920" height="1080"/>
+          </div>
           <div class="p-5">
-            <h3 class="font-semibold">Medición de medidores | Centro comercial</h3>
+            <h3 class="font-semibold">Medición | Centro comercial</h3>
             <p class="mt-2 text-sm text-gray-600">Verificación de consumo por locales y reporte de pérdidas técnicas.</p>
           </div>
         </article>
-
-        <article class="bg-white rounded-xl shadow-soft overflow-hidden">
-          <div class="aspect-[16/9] bg-gray-200 grid place-items-center text-sm text-gray-600"><img src="cerca-electrica-perimetral.png"></div>
+        <article class="bg-white rounded-xl shadow-soft overflow-hidden card-animate reveal">
+          <div class="ratio aspect-[16/9] bg-gray-100">
+            <img src="cerca-electrica-perimetral.png" alt="Cerca eléctrica perimetral en bodega logística" loading="lazy" width="1920" height="1080"/>
+          </div>
           <div class="p-5">
-            <h3 class="font-semibold">Cerca eléctrica perimetral | Bodega logística</h3>
-            <p class="mt-2 text-sm text-gray-600">Implementación por secciones con monitoreo y señalización normativa.</p>
+            <h3 class="font-semibold">Cerca eléctrica | Bodega logística</h3>
+            <p class="mt-2 text-sm text-gray-600">Implementación por secciones con monitoreo y señalización.</p>
           </div>
         </article>
-
-        <article class="bg-white rounded-xl shadow-soft overflow-hidden">
-          <div class="aspect-[16/9] bg-gray-200 grid place-items-center text-sm text-gray-600"><img src="tablero-principal-upgrade.png"></div>
+        <article class="bg-white rounded-xl shadow-soft overflow-hidden card-animate reveal">
+          <div class="ratio aspect-[16/9] bg-gray-100">
+            <img src="tablero-principal-upgrade.png" alt="Upgrade de tablero eléctrico principal" loading="lazy" width="1920" height="1080"/>
+          </div>
           <div class="p-5">
-            <h3 class="font-semibold">Upgrade de tablero principal | Planta manufactura</h3>
+            <h3 class="font-semibold">Upgrade de tablero principal</h3>
             <p class="mt-2 text-sm text-gray-600">Redistribución de cargas y protecciones con documentación as-built.</p>
           </div>
         </article>
-
-        <article class="bg-white rounded-xl shadow-soft overflow-hidden">
-          <div class="aspect-[16/9] bg-gray-200 grid place-items-center text-sm text-gray-600"><img src="planos-condominio-residencial.png"></div>
+        <article class="bg-white rounded-xl shadow-soft overflow-hidden card-animate reveal">
+          <div class="ratio aspect-[16/9] bg-gray-100">
+            <img src="planos-condominio-residencial.png" alt="Planos eléctricos para condominio residencial" loading="lazy" width="1920" height="1080"/>
+          </div>
           <div class="p-5">
-            <h3 class="font-semibold">Planos eléctricos | Condominio residencial</h3>
-            <p class="mt-2 text-sm text-gray-600">Diseño de acometidas, iluminación y baja tensión para áreas comunes.</p>
+            <h3 class="font-semibold">Planos eléctricos | Condominio</h3>
+            <p class="mt-2 text-sm text-gray-600">Acometidas, iluminación y baja tensión para áreas comunes.</p>
           </div>
         </article>
-
-        <article class="bg-white rounded-xl shadow-soft overflow-hidden">
-          <div class="aspect-[16/9] bg-gray-200 grid place-items-center text-sm text-gray-600"><img src="mantenimiento-cerca-industrial.png"></div>
+        <article class="bg-white rounded-xl shadow-soft overflow-hidden card-animate reveal">
+          <div class="ratio aspect-[16/9] bg-gray-100">
+            <img src="mantenimiento-cerca-industrial.png" alt="Mantenimiento de cerca eléctrica en parque industrial" loading="lazy" width="1920" height="1080"/>
+          </div>
           <div class="p-5">
             <h3 class="font-semibold">Mantenimiento de cerca | Parque industrial</h3>
-            <p class="mt-2 text-sm text-gray-600">Recorrido completo, tensado y sustitución de secciones críticas.</p>
+            <p class="mt-2 text-sm text-gray-600">Recorrido, tensado y sustitución de secciones críticas.</p>
           </div>
         </article>
       </div>
     </div>
   </section>
 
-  <!-- SOBRE NOSOTROS -->
+  <!-- SOBRE NOSOTROS (con misión/visión/valores) -->
   <section id="nosotros" class="py-16 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-10 items-center">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-10 items-start">
       <div>
-        <h2 class="text-2xl sm:text-3xl font-bold">Sobre nosotros</h2>
-        <p class="mt-4 text-gray-700">Somos ELITEC, un equipo especializado en soluciones eléctricas para la industria y el comercio en Costa Rica. Trabajamos con enfoque técnico, seguridad y documentación clara para que cada proyecto avance sin fricciones, desde el diseño de planos hasta la instalación y puesta a punto.</p>
-        <ul class="mt-6 space-y-3 text-gray-700">
-          <li class="flex items-start gap-3"><span class="w-2.5 h-2.5 rounded-full bg-brand-red mt-2"></span> Planificación y diseño orientado a permisos, estándares y ejecución eficiente.</li>
-          <li class="flex items-start gap-3"><span class="w-2.5 h-2.5 rounded-full bg-brand-red mt-2"></span> Medición y verificación con reportes accionables para decisiones rápidas.</li>
-          <li class="flex items-start gap-3"><span class="w-2.5 h-2.5 rounded-full bg-brand-red mt-2"></span> Instalación de cercas eléctricas con buenas prácticas de seguridad.</li>
-        </ul>
+        <h2 class="reveal text-2xl sm:text-3xl font-display font-bold">Quiénes somos</h2>
+        <p class="mt-4 text-gray-700">Somos una empresa costarricense dedicada a brindar servicios eléctricos con altos estándares de seguridad, calidad y eficiencia. Nuestro equipo técnico respalda cada proyecto con planificación, documentación clara y cumplimiento normativo.</p>
+        <div class="mt-6 grid sm:grid-cols-2 gap-6">
+          <div class="bg-white rounded-xl shadow-soft p-5"><h3 class="font-semibold">Misión</h3><p class="mt-2 text-gray-700">Brindar servicios eléctricos integrales que aseguren la seguridad, funcionalidad y eficiencia de las instalaciones de nuestros clientes.</p></div>
+          <div class="bg-white rounded-xl shadow-soft p-5"><h3 class="font-semibold">Visión</h3><p class="mt-2 text-gray-700">Ser reconocidos como empresa líder en soluciones eléctricas por innovación, calidad y satisfacción del cliente.</p></div>
+          <div class="bg-white rounded-xl shadow-soft p-5 sm:col-span-2">
+            <h3 class="font-semibold">Valores</h3>
+            <ul class="mt-2 grid grid-cols-2 gap-x-6 gap-y-2 text-gray-700 text-sm"><li>Responsabilidad</li><li>Seguridad</li><li>Compromiso</li><li>Calidad</li><li>Confianza</li><li>Innovación</li></ul>
+          </div>
+        </div>
+        <div class="mt-6">
+          <h3 class="font-semibold">Nuestra historia</h3>
+          <p class="mt-2 text-gray-700">ELITEC nació con el propósito de ofrecer servicios eléctricos profesionales y accesibles en Costa Rica, evolucionando con tecnología y talento certificado para atender los retos del sector industrial y comercial.</p>
+        </div>
       </div>
       <div class="rounded-2xl bg-white shadow-soft p-6">
-        <div class="aspect-[4/3] bg-gray-200 grid place-items-center text-sm text-gray-600"><img src="equipo-elitec.png"></div>
+        <div class="ratio aspect-[4/3] bg-gray-100">
+          <img src="equipo-elitec.png" alt="Equipo ELITEC" loading="lazy" width="1600" height="1200"/>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- CTA / CONTACTO RÁPIDO -->
+  <!-- CTA / WhatsApp -->
   <section id="nuevos" class="py-12 bg-brand-red text-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center justify-between gap-6">
       <div>
         <h3 class="text-2xl font-bold">¿Necesitás una solución eléctrica confiable?</h3>
         <p class="mt-2 text-white/90">Escribinos por WhatsApp y coordinamos una visita técnica.</p>
       </div>
-      <a href="#contacto" class="inline-flex items-center px-6 py-3 rounded-md bg-white text-brand-red font-semibold hover:bg-gray-100">Contactar</a>
+      <a href="https://wa.me/50600000000?text=Hola%20ELITEC%2C%20me%20gustar%C3%ADa%20coordinar%20una%20visita%20t%C3%A9cnica" class="inline-flex items-center px-6 py-3 rounded-md bg-white text-brand-red font-semibold hover:bg-gray-100" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp">Contactar</a>
     </div>
   </section>
 
@@ -257,18 +362,18 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-3 gap-10">
       <div>
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded bg-brand-red"></div>
+          <img src="logo_elitec_blanco.png" alt="ELITEC" class="w-10 h-10 object-contain" loading="lazy" width="40" height="40"/>
           <span class="text-lg font-bold">ELITEC</span>
         </div>
-        <p class="mt-4 text-sm text-gray-400">Servicios eléctricos profesionales: planos, medición y cercas eléctricas.</p>
+        <p class="mt-4 text-sm text-gray-400">Servicios eléctricos profesionales: planos, instalación, medición y cercas eléctricas.</p>
       </div>
       <div>
         <h4 class="font-semibold">Contacto</h4>
         <ul class="mt-3 space-y-2 text-sm">
-          <li><strong>Dirección:</strong> Dirección de ejemplo, Costa Rica</li>
-          <li><strong>Teléfonos:</strong> (000) 0000-0000</li>
-          <li><strong>Correo:</strong> contacto@elitec.cr</li>
-          <li><strong>Ubicación:</strong> enlace a Google Maps</li>
+          <li><strong>Dirección:</strong> San José, Costa Rica</li>
+          <li><strong>Teléfonos:</strong> <a class="hover:text-white/80" href="tel:+50600000000">+506 0000-0000</a></li>
+          <li><strong>Correo:</strong> <a class="hover:text-white/80" href="mailto:contacto@elitec.cr">contacto@elitec.cr</a></li>
+          <li><strong>Ubicación:</strong> <a class="hover:text-white/80" href="https://maps.google.com/?q=ELITEC%20Costa%20Rica" target="_blank" rel="noopener">Ver mapa</a></li>
         </ul>
       </div>
       <div>
@@ -285,37 +390,119 @@
     </div>
   </footer>
 
-  <!-- JS mínimo: menú móvil y carrusel de fondo -->
+  <!-- JS: consolidado en un solo bloque para evitar redeclaraciones -->
   <script>
-    // Menú móvil
-    const btnMobile = document.getElementById('btnMobile');
-    const mobileMenu = document.getElementById('mobileMenu');
-    btnMobile?.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+    (function(){
+      // Menú móvil
+      const btnMobile = document.getElementById('btnMobile');
+      const mobileMenu = document.getElementById('mobileMenu');
+      btnMobile?.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
 
-    // Carrusel hero: cambia imagen de fondo y puntos
-    const slides = ['hero_1.png','hero_2.png','hero_3.png']; // Reemplazar con imágenes reales
-    const heroBg = document.getElementById('heroBg');
-    const heroDots = document.getElementById('heroDots');
-    let idx = 0;
+      // Navegación activa al hacer scroll
+      const sections = ['nuevos','servicios','portafolio','nosotros','contacto'];
+      const links = new Map();
+      document.querySelectorAll('header nav a[href^="#"]').forEach(a=>{ links.set(a.getAttribute('href').slice(1), a); });
+      const obs = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+          const id = e.target.id; if(!id) return; const link = links.get(id);
+          if(link){ e.isIntersecting ? link.classList.add('text-brand-red') : link.classList.remove('text-brand-red'); }
+        });
+      },{ rootMargin: '-40% 0% -55% 0%', threshold: 0.01});
+      sections.forEach(id=>{ const el = document.getElementById(id); if(el) obs.observe(el); });
 
-    function renderDots() {
-      heroDots.innerHTML = '';
-      slides.forEach((_, i) => {
-        const b = document.createElement('button');
-        b.className = 'w-2.5 h-2.5 rounded-full ' + (i===idx ? 'bg-white' : 'bg-white/40');
-        b.addEventListener('click', () => { idx = i; updateSlide(); });
-        heroDots.appendChild(b);
-      });
-    }
-    function updateSlide() {
-      heroBg.style.backgroundImage = `url('${slides[idx]}')`;
+      // Carrusel hero (PNG): rotación simple
+      const slides = ['hero_1.png','hero_2.png','hero_3.png'];
+      const heroImg = document.getElementById('heroImg');
+      const heroDots = document.getElementById('heroDots');
+      let idx = 0;
+      function renderDots() {
+        heroDots.innerHTML = '';
+        slides.forEach((_, i) => {
+          const b = document.createElement('button');
+          b.className = 'w-2.5 h-2.5 rounded-full ' + (i===idx ? 'bg-white' : 'bg-white/40');
+          b.addEventListener('click', () => { idx = i; updateSlide(); });
+          heroDots.appendChild(b);
+        });
+      }
+      function updateSlide() { heroImg.src = slides[idx]; heroImg.alt = 'Hero ' + (idx+1); renderDots(); }
+      setInterval(() => { idx = (idx + 1) % slides.length; updateSlide(); }, 6000);
       renderDots();
-    }
-    setInterval(() => { idx = (idx + 1) % slides.length; updateSlide(); }, 6000);
-    updateSlide();
 
-    // Año en footer
-    document.getElementById('year').textContent = new Date().getFullYear();
+      // Año en footer
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      // === Dinamismo agregado ===
+      // 1) Scroll reveal
+      const revEls = document.querySelectorAll('.reveal');
+      const revObs = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); revObs.unobserve(e.target); } });
+      }, {threshold: 0.12});
+      revEls.forEach(el=>revObs.observe(el));
+
+      // 2) Parallax suave del copy en hero
+      const heroCopy = document.getElementById('heroCopy');
+      const parallax = ()=>{
+        const y = Math.min(window.scrollY, 300);
+        if(heroCopy) heroCopy.style.transform = `translateY(${y * -0.08}px)`;
+      };
+      window.addEventListener('scroll', parallax, {passive:true});
+
+      // 3) CountUp al entrar
+      const counters = document.querySelectorAll('.countup');
+      const cuObs = new IntersectionObserver((entries)=>{
+        entries.forEach(entry=>{
+          if(!entry.isIntersecting) return;
+          const el = entry.target;
+          const to = parseInt(el.getAttribute('data-to'),10) || 0;
+          let cur = 0;
+          const step = Math.ceil(to/60); // ~1s
+          const tick = ()=>{ cur += step; if(cur >= to){ el.textContent = to; return; } el.textContent = cur; requestAnimationFrame(tick); };
+          tick();
+          cuObs.unobserve(el);
+        });
+      }, {threshold: 0.6});
+      counters.forEach(el=>cuObs.observe(el));
+
+      // 4) Acordeón con transición de altura
+      const items = document.querySelectorAll('.accordion-btn');
+      let openPanel = null, openIcon = null;
+
+      function openAccordion(panel, icon){
+        panel.style.height = panel.scrollHeight + 'px';
+        icon.style.transform = 'rotate(180deg)';
+        openPanel = panel; openIcon = icon;
+      }
+      function closeAccordion(panel, icon){
+        panel.style.height = panel.scrollHeight + 'px';
+        requestAnimationFrame(()=>{ panel.style.height = '0px'; });
+        icon.style.transform = 'rotate(0deg)';
+      }
+
+      items.forEach(btn=>{
+        const panel = btn.parentElement.querySelector('.accordion-panel');
+        const icon = btn.querySelector('svg');
+        // estado inicial
+        panel.style.height = '0px';
+        btn.addEventListener('click', ()=>{
+          const isOpen = openPanel === panel;
+          if(openPanel && openPanel !== panel){ closeAccordion(openPanel, openIcon); openPanel = null; openIcon = null; }
+          if(isOpen){ closeAccordion(panel, icon); openPanel = null; openIcon = null; }
+          else{
+            openAccordion(panel, icon);
+            panel.addEventListener('transitionend', function handler(){
+              if(openPanel === panel) panel.style.height = 'auto';
+              panel.removeEventListener('transitionend', handler);
+            });
+          }
+        });
+      });
+      window.addEventListener('resize', ()=>{
+        if(openPanel && openPanel.style.height === 'auto'){
+          openPanel.style.height = openPanel.scrollHeight + 'px';
+          requestAnimationFrame(()=>{ openPanel.style.height = 'auto'; });
+        }
+      });
+    })();
   </script>
 </body>
 </html>
