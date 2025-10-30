@@ -55,9 +55,12 @@
   @media (prefers-reduced-motion: reduce){
     .reveal,.card-animate,.parallax-hero{transition:none!important;transform:none!important}
   }
-  /* Acordeón suave */
-  .accordion-panel{overflow:hidden;height:0;transition:height .28s ease}
-  .accordion-btn svg{transition:transform .24s ease}
+  /* Tabs para Servicios */
+  .tabs{display:flex;flex-wrap:wrap;gap:.5rem}
+  .tab-btn{padding:.5rem 1rem;border:1px solid #e5e7eb;border-radius:.75rem;background:#fff;transition:background .2s ease,color .2s ease,border-color .2s ease}
+  .tab-btn[aria-selected="true"]{background:#BE1622;color:#fff;border-color:#BE1622}
+  .tab-panel{display:none}
+  .tab-panel.active{display:block}
 </style>
   <meta name="description" content="ELITEC | Soluciones eléctricas integrales: planos, instalaciones, medición y cercas eléctricas en Costa Rica."/>
   <meta property="og:title" content="ELITEC | Servicios Eléctricos"/>
@@ -73,7 +76,7 @@
       <div class="flex items-center justify-between h-16">
         <a href="#" class="flex items-center gap-3">
           <!-- Logo: reemplazar src por el real en PNG o SVG -->
-          <img src="isotipo.png" alt="ELITEC" class="w-10 h-10 object-contain" loading="eager" width="40" height="40"/>
+          <img src="logo_elitec.png" alt="ELITEC" class="w-10 h-10 object-contain" loading="eager" width="40" height="40"/>
           <span class="text-lg font-bold tracking-wide">ELITEC</span>
         </a>
         <nav class="hidden md:flex items-center gap-6 text-sm font-medium">
@@ -195,60 +198,85 @@
   <section id="todos-servicios" class="py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <h2 id="servicios-todos" class="reveal text-2xl sm:text-3xl font-display font-bold">Servicios</h2>
-      <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div class="bg-white rounded-xl shadow-soft p-0 overflow-hidden reveal">
-          <button class="w-full flex items-center justify-between px-6 py-4 text-left focus:outline-none focus:ring-2 focus:ring-brand-red/40 accordion-btn">
-            <span class="font-semibold">Diseño de planos eléctricos</span>
-            <svg class="w-5 h-5 transition-transform" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"/></svg>
-          </button>
-          <div class="px-6 pb-5 accordion-panel">
-            <p class="text-gray-600">Elaboración de planos conforme normativa, aptos para permisos y ejecución de obra. Actualización as-built.</p>
+
+      <!-- Tabs -->
+      <div class="mt-6 tabs" role="tablist" aria-label="Servicios ELITEC">
+        <button class="tab-btn reveal" role="tab" aria-selected="true" aria-controls="tab-planos" id="btn-planos" data-tab="planos">Planos eléctricos</button>
+        <button class="tab-btn reveal delay-1" role="tab" aria-selected="false" aria-controls="tab-instalaciones" id="btn-instalaciones" data-tab="instalaciones">Instalaciones eléctricas</button>
+        <button class="tab-btn reveal delay-2" role="tab" aria-selected="false" aria-controls="tab-medicion" id="btn-medicion" data-tab="medicion">Medición de medidores</button>
+        <button class="tab-btn reveal delay-3" role="tab" aria-selected="false" aria-controls="tab-cercas" id="btn-cercas" data-tab="cercas">Cercas eléctricas</button>
+        <button class="tab-btn reveal" role="tab" aria-selected="false" aria-controls="tab-mantenimiento" id="btn-mantenimiento" data-tab="mantenimiento">Mantenimiento</button>
+        <button class="tab-btn reveal delay-1" role="tab" aria-selected="false" aria-controls="tab-asesoria" id="btn-asesoria" data-tab="asesoria">Asesoría y supervisión</button>
+      </div>
+
+      <!-- Grid principal -->
+      <div class="mt-8 grid lg:grid-cols-2 gap-8">
+        <!-- Paneles de contenido -->
+        <div>
+          <div class="tab-panel active reveal" id="tab-planos" role="tabpanel" aria-labelledby="btn-planos">
+            <h3 class="font-semibold text-lg">Diseño de planos eléctricos</h3>
+            <p class="mt-2 text-gray-600">Elaboración de planos conforme normativa, aptos para permisos y ejecución de obra. Actualización as-built y asesoría durante la implementación.</p>
+            <ul class="mt-3 text-sm text-gray-600 list-disc pl-5 space-y-1">
+              <li>Levantamiento en sitio y documentación técnica</li>
+              <li>Planos para municipalidades y entes reguladores</li>
+              <li>Revisión y ajuste de planos existentes</li>
+            </ul>
+            <a href="#contacto" class="mt-5 inline-flex items-center px-4 py-2 rounded-md bg-brand-red text-white font-medium hover:bg-brand-red/90">Cotizar</a>
+          </div>
+          <div class="tab-panel reveal" id="tab-instalaciones" role="tabpanel" aria-labelledby="btn-instalaciones">
+            <h3 class="font-semibold text-lg">Instalaciones eléctricas</h3>
+            <p class="mt-2 text-gray-600">Cableado, canalización, tableros y alumbrado para residencial, comercial e industrial cumpliendo normativa y buenas prácticas.</p>
+            <ul class="mt-3 text-sm text-gray-600 list-disc pl-5 space-y-1">
+              <li>Montaje de tableros y distribución</li>
+              <li>Iluminación eficiente y de seguridad</li>
+              <li>Canalización y cableado estructurado</li>
+            </ul>
+            <a href="#contacto" class="mt-5 inline-flex items-center px-4 py-2 rounded-md bg-brand-red text-white font-medium hover:bg-brand-red/90">Solicitar visita</a>
+          </div>
+          <div class="tab-panel reveal" id="tab-medicion" role="tabpanel" aria-labelledby="btn-medicion">
+            <h3 class="font-semibold text-lg">Medición y verificación de medidores</h3>
+            <p class="mt-2 text-gray-600">Diagnóstico energético, calibración y reportes para control de consumo y balance de carga en instalaciones.</p>
+            <ul class="mt-3 text-sm text-gray-600 list-disc pl-5 space-y-1">
+              <li>Pruebas con instrumentos certificados</li>
+              <li>Informes técnicos y recomendaciones</li>
+              <li>Monitoreo y seguimiento</li>
+            </ul>
+            <a href="#contacto" class="mt-5 inline-flex items-center px-4 py-2 rounded-md bg-brand-red text-white font-medium hover:bg-brand-red/90">Agendar medición</a>
+          </div>
+          <div class="tab-panel reveal" id="tab-cercas" role="tabpanel" aria-labelledby="btn-cercas">
+            <h3 class="font-semibold text-lg">Cercas eléctricas</h3>
+            <p class="mt-2 text-gray-600">Diseño, instalación y mantenimiento de sistemas de seguridad perimetral con señalización reglamentaria.</p>
+            <ul class="mt-3 text-sm text-gray-600 list-disc pl-5 space-y-1">
+              <li>Propuesta por tramos y zonas</li>
+              <li>Tensado, aisladores y control</li>
+              <li>Mantenimiento preventivo y correctivo</li>
+            </ul>
+            <a href="#contacto" class="mt-5 inline-flex items-center px-4 py-2 rounded-md bg-brand-red text-white font-medium hover:bg-brand-red/90">Solicitar evaluación</a>
+          </div>
+          <div class="tab-panel reveal" id="tab-mantenimiento" role="tabpanel" aria-labelledby="btn-mantenimiento">
+            <h3 class="font-semibold text-lg">Mantenimiento eléctrico</h3>
+            <p class="mt-2 text-gray-600">Programas preventivos y correctivos; limpieza de tableros, termografías y sustitución de componentes.</p>
+            <ul class="mt-3 text-sm text-gray-600 list-disc pl-5 space-y-1">
+              <li>Rutinas programadas por criticidad</li>
+              <li>Reporte de hallazgos y mejoras</li>
+              <li>Atención de emergencias</li>
+            </ul>
+            <a href="#contacto" class="mt-5 inline-flex items-center px-4 py-2 rounded-md bg-brand-red text-white font-medium hover:bg-brand-red/90">Solicitar plan</a>
+          </div>
+          <div class="tab-panel reveal" id="tab-asesoria" role="tabpanel" aria-labelledby="btn-asesoria">
+            <h3 class="font-semibold text-lg">Asesoría y supervisión</h3>
+            <p class="mt-2 text-gray-600">Acompañamiento técnico en obra, control de calidad y cumplimiento de normativa en cada etapa.</p>
+            <ul class="mt-3 text-sm text-gray-600 list-disc pl-5 space-y-1">
+              <li>Revisión de contratistas y entregables</li>
+              <li>Validación de planos y permisos</li>
+              <li>Bitácora y seguimiento</li>
+            </ul>
+            <a href="#contacto" class="mt-5 inline-flex items-center px-4 py-2 rounded-md bg-brand-red text-white font-medium hover:bg-brand-red/90">Hablar con un experto</a>
           </div>
         </div>
-        <div class="bg-white rounded-xl shadow-soft p-0 overflow-hidden reveal">
-          <button class="w-full flex items-center justify-between px-6 py-4 text-left focus:outline-none focus:ring-2 focus:ring-brand-red/40 accordion-btn">
-            <span class="font-semibold">Instalaciones eléctricas</span>
-            <svg class="w-5 h-5 transition-transform" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"/></svg>
-          </button>
-          <div class="px-6 pb-5 accordion-panel">
-            <p class="text-gray-600">Cableado, canalización, tableros y alumbrado para residencial, comercial e industrial.</p>
-          </div>
-        </div>
-        <div class="bg-white rounded-xl shadow-soft p-0 overflow-hidden reveal">
-          <button class="w-full flex items-center justify-between px-6 py-4 text-left focus:outline-none focus:ring-2 focus:ring-brand-red/40 accordion-btn">
-            <span class="font-semibold">Medición y verificación de medidores</span>
-            <svg class="w-5 h-5 transition-transform" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"/></svg>
-          </button>
-          <div class="px-6 pb-5 accordion-panel">
-            <p class="text-gray-600">Diagnóstico energético, calibración y reportes para control de consumo.</p>
-          </div>
-        </div>
-        <div class="bg-white rounded-xl shadow-soft p-0 overflow-hidden reveal">
-          <button class="w-full flex items-center justify-between px-6 py-4 text-left focus:outline-none focus:ring-2 focus:ring-brand-red/40 accordion-btn">
-            <span class="font-semibold">Cercas eléctricas</span>
-            <svg class="w-5 h-5 transition-transform" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"/></svg>
-          </button>
-          <div class="px-6 pb-5 accordion-panel">
-            <p class="text-gray-600">Diseño, instalación y mantenimiento con señalización reglamentaria.</p>
-          </div>
-        </div>
-        <div class="bg-white rounded-xl shadow-soft p-0 overflow-hidden reveal">
-          <button class="w-full flex items-center justify-between px-6 py-4 text-left focus:outline-none focus:ring-2 focus:ring-brand-red/40 accordion-btn">
-            <span class="font-semibold">Mantenimiento eléctrico</span>
-            <svg class="w-5 h-5 transition-transform" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"/></svg>
-          </button>
-          <div class="px-6 pb-5 accordion-panel">
-            <p class="text-gray-600">Preventivo y correctivo, limpieza de tableros y reemplazo de componentes.</p>
-          </div>
-        </div>
-        <div class="bg-white rounded-xl shadow-soft p-0 overflow-hidden reveal">
-          <button class="w-full flex items-center justify-between px-6 py-4 text-left focus:outline-none focus:ring-2 focus:ring-brand-red/40 accordion-btn">
-            <span class="font-semibold">Asesoría y supervisión</span>
-            <svg class="w-5 h-5 transition-transform" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"/></svg>
-          </button>
-          <div class="px-6 pb-5 accordion-panel">
-            <p class="text-gray-600">Control de calidad en obra, cumplimiento normativo y soporte en permisos.</p>
-          </div>
+        <!-- Lado visual -->
+        <div class="ratio aspect-[4/3] bg-gray-100 rounded-2xl overflow-hidden shadow-soft reveal">
+          <img id="servicio-img" src="planos-electricos.png" alt="Imagen servicio" loading="lazy" width="1600" height="1200" />
         </div>
       </div>
     </div>
@@ -362,7 +390,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-3 gap-10">
       <div>
         <div class="flex items-center gap-3">
-          <img src="isotipo.png" alt="ELITEC" class="w-10 h-10 object-contain" loading="lazy" width="40" height="40"/>
+          <img src="logo_elitec_blanco.png" alt="ELITEC" class="w-10 h-10 object-contain" loading="lazy" width="40" height="40"/>
           <span class="text-lg font-bold">ELITEC</span>
         </div>
         <p class="mt-4 text-sm text-gray-400">Servicios eléctricos profesionales: planos, instalación, medición y cercas eléctricas.</p>
@@ -390,119 +418,150 @@
     </div>
   </footer>
 
-  <!-- JS: consolidado en un solo bloque para evitar redeclaraciones -->
+  <!-- JS: ES5-compatible -->
   <script>
-    (function(){
-      // Menú móvil
-      const btnMobile = document.getElementById('btnMobile');
-      const mobileMenu = document.getElementById('mobileMenu');
-      btnMobile?.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+  (function(){
+    // Menú móvil (sin optional chaining)
+    var btnMobile = document.getElementById('btnMobile');
+    var mobileMenu = document.getElementById('mobileMenu');
+    if(btnMobile){
+      btnMobile.addEventListener('click', function(){
+        if(mobileMenu){ mobileMenu.classList.toggle('hidden'); }
+      });
+    }
 
-      // Navegación activa al hacer scroll
-      const sections = ['nuevos','servicios','portafolio','nosotros','contacto'];
-      const links = new Map();
-      document.querySelectorAll('header nav a[href^="#"]').forEach(a=>{ links.set(a.getAttribute('href').slice(1), a); });
-      const obs = new IntersectionObserver((entries)=>{
-        entries.forEach(e=>{
-          const id = e.target.id; if(!id) return; const link = links.get(id);
-          if(link){ e.isIntersecting ? link.classList.add('text-brand-red') : link.classList.remove('text-brand-red'); }
-        });
+    // Navegación activa al hacer scroll (con guard para IntersectionObserver)
+    var sections = ['nuevos','servicios','portafolio','nosotros','contacto'];
+    var links = new Map ? new Map() : (function(){ return { _m: {}, set: function(k,v){this._m[k]=v;}, get: function(k){return this._m[k];} }; })();
+    var navAnchors = document.querySelectorAll('header nav a[href^="#"]');
+    for(var i=0;i<navAnchors.length;i++){ var a = navAnchors[i]; links.set(a.getAttribute('href').slice(1), a); }
+
+    if('IntersectionObserver' in window){
+      var obs = new IntersectionObserver(function(entries){
+        for(var j=0;j<entries.length;j++){
+          var e = entries[j];
+          var id = e.target.id; if(!id) continue; var link = links.get(id);
+          if(link){ if(e.isIntersecting){ link.classList.add('text-brand-red'); } else { link.classList.remove('text-brand-red'); } }
+        }
       },{ rootMargin: '-40% 0% -55% 0%', threshold: 0.01});
-      sections.forEach(id=>{ const el = document.getElementById(id); if(el) obs.observe(el); });
+      for(var s=0;s<sections.length;s++){ var el = document.getElementById(sections[s]); if(el) obs.observe(el); }
+    }
 
-      // Carrusel hero (PNG): rotación simple
-      const slides = ['hero_1.png','hero_2.png','hero_3.png'];
-      const heroImg = document.getElementById('heroImg');
-      const heroDots = document.getElementById('heroDots');
-      let idx = 0;
-      function renderDots() {
-        heroDots.innerHTML = '';
-        slides.forEach((_, i) => {
-          const b = document.createElement('button');
-          b.className = 'w-2.5 h-2.5 rounded-full ' + (i===idx ? 'bg-white' : 'bg-white/40');
-          b.addEventListener('click', () => { idx = i; updateSlide(); });
-          heroDots.appendChild(b);
-        });
+    // Carrusel hero (PNG): rotación simple
+    var slides = ['hero_1.png','hero_2.png','hero_3.png'];
+    var heroImg = document.getElementById('heroImg');
+    var heroDots = document.getElementById('heroDots');
+    var idx = 0;
+    function renderDots() {
+      if(!heroDots) return;
+      heroDots.innerHTML = '';
+      for(var d=0; d<slides.length; d++){
+        var b = document.createElement('button');
+        b.className = 'w-2.5 h-2.5 rounded-full ' + (d===idx ? 'bg-white' : 'bg-white/40');
+        (function(i){ b.addEventListener('click', function(){ idx = i; updateSlide(); }); })(d);
+        heroDots.appendChild(b);
       }
-      function updateSlide() { heroImg.src = slides[idx]; heroImg.alt = 'Hero ' + (idx+1); renderDots(); }
-      setInterval(() => { idx = (idx + 1) % slides.length; updateSlide(); }, 6000);
-      renderDots();
+    }
+    function updateSlide() { if(heroImg){ heroImg.src = slides[idx]; heroImg.alt = 'Hero ' + (idx+1); } renderDots(); }
+    setInterval(function(){ idx = (idx + 1) % slides.length; updateSlide(); }, 6000);
+    renderDots();
 
-      // Año en footer
-      document.getElementById('year').textContent = new Date().getFullYear();
+    // Año en footer
+    var yEl = document.getElementById('year'); if(yEl){ yEl.textContent = new Date().getFullYear(); }
 
-      // === Dinamismo agregado ===
-      // 1) Scroll reveal
-      const revEls = document.querySelectorAll('.reveal');
-      const revObs = new IntersectionObserver((entries)=>{
-        entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); revObs.unobserve(e.target); } });
+    // === Dinamismo agregado ===
+    // 1) Scroll reveal (fallback si no hay IO)
+    var revEls = document.querySelectorAll('.reveal');
+    if('IntersectionObserver' in window){
+      var revObs = new IntersectionObserver(function(entries){
+        for(var r=0;r<entries.length;r++){
+          var ent = entries[r];
+          if(ent.isIntersecting){ ent.target.classList.add('in'); revObs.unobserve(ent.target); }
+        }
       }, {threshold: 0.12});
-      revEls.forEach(el=>revObs.observe(el));
+      for(var r2=0;r2<revEls.length;r2++){ revObs.observe(revEls[r2]); }
+    } else {
+      for(var r3=0;r3<revEls.length;r3++){ revEls[r3].classList.add('in'); }
+    }
 
-      // 2) Parallax suave del copy en hero
-      const heroCopy = document.getElementById('heroCopy');
-      const parallax = ()=>{
-        const y = Math.min(window.scrollY, 300);
-        if(heroCopy) heroCopy.style.transform = `translateY(${y * -0.08}px)`;
-      };
-      window.addEventListener('scroll', parallax, {passive:true});
+    // 2) Parallax suave del copy en hero (con fallback)
+    var heroCopy = document.getElementById('heroCopy');
+    function parallax(){
+      if(!heroCopy) return;
+      var y = Math.min(window.scrollY || window.pageYOffset || 0, 300);
+      heroCopy.style.transform = 'translateY(' + (y * -0.08) + 'px)';
+    }
+    window.addEventListener('scroll', parallax, {passive:true});
 
-      // 3) CountUp al entrar
-      const counters = document.querySelectorAll('.countup');
-      const cuObs = new IntersectionObserver((entries)=>{
-        entries.forEach(entry=>{
-          if(!entry.isIntersecting) return;
-          const el = entry.target;
-          const to = parseInt(el.getAttribute('data-to'),10) || 0;
-          let cur = 0;
-          const step = Math.ceil(to/60); // ~1s
-          const tick = ()=>{ cur += step; if(cur >= to){ el.textContent = to; return; } el.textContent = cur; requestAnimationFrame(tick); };
-          tick();
-          cuObs.unobserve(el);
-        });
+    // 3) CountUp al entrar (guardar compatibilidad básica)
+    var counters = document.querySelectorAll('.countup');
+    function startCount(el){
+      var to = parseInt(el.getAttribute('data-to'),10) || 0;
+      var cur = 0;
+      var step = Math.max(1, Math.ceil(to/60));
+      function tick(){
+        cur += step;
+        if(cur >= to){ el.textContent = to; return; }
+        el.textContent = cur;
+        if(window.requestAnimationFrame){ requestAnimationFrame(tick); } else { setTimeout(tick, 16); }
+      }
+      tick();
+    }
+    if('IntersectionObserver' in window){
+      var cuObs = new IntersectionObserver(function(entries){
+        for(var c=0;c<entries.length;c++){
+          var entry = entries[c];
+          if(!entry.isIntersecting) continue;
+          startCount(entry.target);
+          cuObs.unobserve(entry.target);
+        }
       }, {threshold: 0.6});
-      counters.forEach(el=>cuObs.observe(el));
+      for(var c2=0;c2<counters.length;c2++){ cuObs.observe(counters[c2]); }
+    } else {
+      for(var c3=0;c3<counters.length;c3++){ startCount(counters[c3]); }
+    }
 
-      // 4) Acordeón con transición de altura
-      const items = document.querySelectorAll('.accordion-btn');
-      let openPanel = null, openIcon = null;
-
-      function openAccordion(panel, icon){
-        panel.style.height = panel.scrollHeight + 'px';
-        icon.style.transform = 'rotate(180deg)';
-        openPanel = panel; openIcon = icon;
+    // 4) Tabs de Servicios (sin sintaxis moderna)
+    var tabButtons = document.querySelectorAll('.tab-btn');
+    var tabPanels = document.querySelectorAll('.tab-panel');
+    var servicioImg = document.getElementById('servicio-img');
+    var imgMap = {
+      planos: 'planos-electricos.png',
+      instalaciones: 'tablero-principal-upgrade.png',
+      medicion: 'medicion-de-medidores.png',
+      cercas: 'cercas-electricas.png',
+      mantenimiento: 'mantenimiento-cerca-industrial.png',
+      asesoria: 'planta-empacadora-planos.png'
+    };
+    function activateTab(key){
+      for(var t=0;t<tabButtons.length;t++){
+        var b = tabButtons[t];
+        var sel = (b.getAttribute('data-tab') === key);
+        b.setAttribute('aria-selected', sel);
+        b.tabIndex = sel ? 0 : -1;
       }
-      function closeAccordion(panel, icon){
-        panel.style.height = panel.scrollHeight + 'px';
-        requestAnimationFrame(()=>{ panel.style.height = '0px'; });
-        icon.style.transform = 'rotate(0deg)';
+      for(var p=0;p<tabPanels.length;p++){
+        var pn = tabPanels[p];
+        pn.classList.toggle('active', pn.id === 'tab-' + key);
       }
-
-      items.forEach(btn=>{
-        const panel = btn.parentElement.querySelector('.accordion-panel');
-        const icon = btn.querySelector('svg');
-        // estado inicial
-        panel.style.height = '0px';
-        btn.addEventListener('click', ()=>{
-          const isOpen = openPanel === panel;
-          if(openPanel && openPanel !== panel){ closeAccordion(openPanel, openIcon); openPanel = null; openIcon = null; }
-          if(isOpen){ closeAccordion(panel, icon); openPanel = null; openIcon = null; }
-          else{
-            openAccordion(panel, icon);
-            panel.addEventListener('transitionend', function handler(){
-              if(openPanel === panel) panel.style.height = 'auto';
-              panel.removeEventListener('transitionend', handler);
-            });
+      if(servicioImg && imgMap[key]){ servicioImg.src = imgMap[key]; }
+    }
+    for(var tb=0;tb<tabButtons.length;tb++){
+      (function(btn){
+        btn.addEventListener('click', function(){ activateTab(btn.getAttribute('data-tab')); });
+        btn.addEventListener('keydown', function(e){
+          var key = e.key || e.which;
+          if(key === 'ArrowRight' || key === 39 || key === 'ArrowLeft' || key === 37){
+            var arr = Array.prototype.slice.call(tabButtons);
+            var i = arr.indexOf(document.activeElement);
+            var next = (key === 'ArrowRight' || key === 39) ? (i+1)%arr.length : (i-1+arr.length)%arr.length;
+            arr[next].focus();
           }
         });
-      });
-      window.addEventListener('resize', ()=>{
-        if(openPanel && openPanel.style.height === 'auto'){
-          openPanel.style.height = openPanel.scrollHeight + 'px';
-          requestAnimationFrame(()=>{ openPanel.style.height = 'auto'; });
-        }
-      });
-    })();
+      })(tabButtons[tb]);
+    }
+    activateTab('planos');
+  })();
   </script>
 </body>
 </html>
