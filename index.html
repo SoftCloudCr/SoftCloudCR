@@ -61,6 +61,17 @@
   .tab-btn[aria-selected="true"]{background:#BE1622;color:#fff;border-color:#BE1622}
   .tab-panel{display:none}
   .tab-panel.active{display:block}
+  /* Accesibilidad: focus visible */
+  a:focus-visible, button:focus-visible { box-shadow: 0 0 0 3px rgba(190,22,34,.25); border-radius: .65rem; outline: none; }
+  /* Crossfade tabs */
+  .tab-panel{opacity:0; transform: translateY(6px); transition: opacity .25s ease, transform .25s ease; display:none}
+  .tab-panel.active{display:block; opacity:1; transform: translateY(0)}
+  #servicio-img{transition:opacity .25s ease}
+  .fade-out{opacity:0}
+  /* Scroll-snap portafolio en móvil */
+  .porta-track{display:flex; gap:1rem; overflow:auto; scroll-snap-type:x mandatory; padding-bottom:.5rem}
+  .porta-item{min-width:85%; scroll-snap-align:start}
+  @media(min-width:1024px){ .porta-track{display:grid; overflow:visible} .porta-item{min-width:auto} }
 </style>
   <meta name="description" content="ELITEC | Soluciones eléctricas integrales: planos, instalaciones, medición y cercas eléctricas en Costa Rica."/>
   <meta property="og:title" content="ELITEC | Servicios Eléctricos"/>
@@ -94,10 +105,7 @@
               <a href="#servicios" class="block px-3 py-2 rounded hover:bg-brand-red/5">Asesoría y supervisión</a>
             </div>
           </div>
-          <form class="relative">
-            <input type="search" placeholder="Buscar" class="w-44 rounded-full border border-brand-gray/50 pl-9 pr-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-red/60" />
-            <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-brand-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m1.6-5.15a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-          </form>
+          
         </nav>
         <button id="btnMobile" class="md:hidden p-2 rounded border border-brand-gray/50" aria-label="Abrir menú">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
@@ -110,9 +118,7 @@
         <a href="#portafolio" class="py-2">Trabajos realizados</a>
         <a href="#nosotros" class="py-2">Sobre nosotros</a>
         <a href="#servicios" class="py-2">Servicios</a>
-        <form class="pt-2">
-          <input type="search" placeholder="Buscar" class="w-full rounded border border-brand-gray/50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-red/60" />
-        </form>
+        
       </div>
     </div>
   </header>
@@ -123,7 +129,8 @@
       <div class="relative w-full parallax-wrap">
         <div class="ratio aspect-[16/9] lg:aspect-[21/9] rounded-2xl overflow-hidden shadow-soft">
           <!-- Diapositivas: reemplazar por PNG reales -->
-          <img id="heroImg" src="hero_1.png" alt="Soluciones eléctricas para industria y comercio" loading="eager" width="2560" height="1100" />
+          <img id="heroImg"$1 fetchpriority="high"/>
+          <div class="absolute inset-0 bg-gradient-to-tr from-black/55 via-black/25 to-transparent backdrop-blur-[1px]"></div>
         </div>
         <div id="heroCopy" class="absolute inset-0 flex items-center parallax-hero">
           <div class="px-6 lg:px-10 max-w-2xl">
@@ -132,7 +139,7 @@
             <p class="mt-4 text-white/90">Soluciones eléctricas integrales: diseño de planos, instalaciones, medición certificada y cercas eléctricas para industria y comercio en Costa Rica.</p>
             <div class="mt-6 flex gap-3">
               <a href="#servicios" class="inline-flex items-center px-5 py-3 rounded-md bg-brand-red text-white font-semibold shadow-soft hover:bg-brand-red/90">Ver servicios</a>
-              <a href="#portafolio" class="inline-flex items-center px-5 py-3 rounded-md bg-white/10 border border-white/30 text-white hover:bg-white/20">Portafolio</a>
+              <a href="#portafolio" class="inline-flex items-center px-5 py-3 rounded-md bg-white/10 border border-white/30 text-white hover:bg-white/20" class="inline-flex items-center px-5 py-3 rounded-md border border-white/60 text-white hover:bg-white hover:text-brand-red transition">Portafolio</a>
             </div>
           </div>
         </div>
@@ -287,9 +294,8 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <h2 class="reveal text-2xl sm:text-3xl font-display font-bold">Trabajos realizados</h2>
       <p class="mt-2 text-gray-600">Selección de proyectos recientes en industria, comercio y residenciales premium.</p>
-      <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- 16:9 recomendado 1920x1080 -->
-        <article class="bg-white rounded-xl shadow-soft overflow-hidden card-animate reveal">
+      <div class="mt-8 porta-track lg:grid lg:grid-cols-3 gap-6">
+        <article class="porta-item bg-white rounded-xl shadow-soft overflow-hidden card-animate reveal">
           <div class="ratio aspect-[16/9] bg-gray-100">
             <img src="planta-empacadora-planos.png" alt="Planos eléctricos en planta empacadora" loading="lazy" width="1920" height="1080"/>
           </div>
@@ -298,7 +304,7 @@
             <p class="mt-2 text-sm text-gray-600">Levantamiento y diseño de planos para líneas de proceso y cuartos fríos.</p>
           </div>
         </article>
-        <article class="bg-white rounded-xl shadow-soft overflow-hidden card-animate reveal">
+        <article class="porta-item bg-white rounded-xl shadow-soft overflow-hidden card-animate reveal">
           <div class="ratio aspect-[16/9] bg-gray-100">
             <img src="medicion-centro-comercial.png" alt="Medición de medidores en centro comercial" loading="lazy" width="1920" height="1080"/>
           </div>
@@ -307,7 +313,7 @@
             <p class="mt-2 text-sm text-gray-600">Verificación de consumo por locales y reporte de pérdidas técnicas.</p>
           </div>
         </article>
-        <article class="bg-white rounded-xl shadow-soft overflow-hidden card-animate reveal">
+        <article class="porta-item bg-white rounded-xl shadow-soft overflow-hidden card-animate reveal">
           <div class="ratio aspect-[16/9] bg-gray-100">
             <img src="cerca-electrica-perimetral.png" alt="Cerca eléctrica perimetral en bodega logística" loading="lazy" width="1920" height="1080"/>
           </div>
@@ -316,7 +322,7 @@
             <p class="mt-2 text-sm text-gray-600">Implementación por secciones con monitoreo y señalización.</p>
           </div>
         </article>
-        <article class="bg-white rounded-xl shadow-soft overflow-hidden card-animate reveal">
+        <article class="porta-item bg-white rounded-xl shadow-soft overflow-hidden card-animate reveal">
           <div class="ratio aspect-[16/9] bg-gray-100">
             <img src="tablero-principal-upgrade.png" alt="Upgrade de tablero eléctrico principal" loading="lazy" width="1920" height="1080"/>
           </div>
@@ -325,7 +331,7 @@
             <p class="mt-2 text-sm text-gray-600">Redistribución de cargas y protecciones con documentación as-built.</p>
           </div>
         </article>
-        <article class="bg-white rounded-xl shadow-soft overflow-hidden card-animate reveal">
+        <article class="porta-item bg-white rounded-xl shadow-soft overflow-hidden card-animate reveal">
           <div class="ratio aspect-[16/9] bg-gray-100">
             <img src="planos-condominio-residencial.png" alt="Planos eléctricos para condominio residencial" loading="lazy" width="1920" height="1080"/>
           </div>
@@ -334,7 +340,7 @@
             <p class="mt-2 text-sm text-gray-600">Acometidas, iluminación y baja tensión para áreas comunes.</p>
           </div>
         </article>
-        <article class="bg-white rounded-xl shadow-soft overflow-hidden card-animate reveal">
+        <article class="porta-item bg-white rounded-xl shadow-soft overflow-hidden card-animate reveal">
           <div class="ratio aspect-[16/9] bg-gray-100">
             <img src="mantenimiento-cerca-industrial.png" alt="Mantenimiento de cerca eléctrica en parque industrial" loading="lazy" width="1920" height="1080"/>
           </div>
@@ -441,7 +447,7 @@
         for(var j=0;j<entries.length;j++){
           var e = entries[j];
           var id = e.target.id; if(!id) continue; var link = links.get(id);
-          if(link){ if(e.isIntersecting){ link.classList.add('text-brand-red'); } else { link.classList.remove('text-brand-red'); } }
+          if(link){ if(e.isIntersecting){ link.classList.add('text-brand-red'); link.setAttribute('aria-current','page'); } else { link.classList.remove('text-brand-red'); link.removeAttribute('aria-current'); } }
         }
       },{ rootMargin: '-40% 0% -55% 0%', threshold: 0.01});
       for(var s=0;s<sections.length;s++){ var el = document.getElementById(sections[s]); if(el) obs.observe(el); }
@@ -544,7 +550,7 @@
         var pn = tabPanels[p];
         pn.classList.toggle('active', pn.id === 'tab-' + key);
       }
-      if(servicioImg && imgMap[key]){ servicioImg.src = imgMap[key]; }
+      if(servicioImg && imgMap[key]){ servicioImg.classList.add('fade-out'); setTimeout(function(){ servicioImg.src = imgMap[key]; servicioImg.classList.remove('fade-out'); },180); }
     }
     for(var tb=0;tb<tabButtons.length;tb++){
       (function(btn){
@@ -563,5 +569,8 @@
     activateTab('planos');
   })();
   </script>
+  <a href="https://wa.me/50600000000?text=Hola%20ELITEC%2C%20me%20gustar%C3%ADa%20coordinar%20una%20visita%20t%C3%A9cnica" class="fixed bottom-5 right-5 z-50 grid place-items-center w-14 h-14 rounded-full bg-green-500 text-white shadow-xl hover:scale-105 transition" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.62-6.003C.122 5.281 5.403 0 12.057 0c3.186 0 6.167 1.24 8.413 3.488a11.826 11.826 0 013.48 8.414c-.003 6.654-5.284 11.935-11.938 11.935a11.9 11.9 0 01-6.003-1.617L.057 24zm6.597-3.807c1.735.995 3.276 1.591 5.392 1.593 5.448.003 9.886-4.431 9.889-9.879.002-5.462-4.415-9.89-9.877-9.893-5.452-.003-9.89 4.432-9.893 9.88a9.86 9.86 0 001.741 5.574l-.999 3.648 3.747-.923zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.767.967-.94 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.149-.173.198-.297.297-.495.099-.198.05-.372-.025-.521-.074-.149-.669-1.612-.916-2.206-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.262.489 1.694.626.712.227 1.36.195 1.872.118.571-.085 1.758-.718 2.006-1.41.248-.694.248-1.289.173-1.414z"/></svg>
+  </a>
 </body>
 </html>
